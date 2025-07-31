@@ -1,41 +1,17 @@
 import re
 
-from textnode import TextNode, TextType, text_node_to_html_node
+from textnode import TextNode, TextType
 
 
-def markdown_to_blocks(markdown):
-
-    raw_blocks = markdown.split("\n\n")
-    
-    cleaned_blocks = []
-    for block in raw_blocks:
-        stripped = block.strip()
-        if stripped:
-            cleaned_blocks.append(stripped)
-    return cleaned_blocks
-                                 
-
-   
-    
-
-def text_to_textnode(text):
-    # Create a TextNode with the input text and TEXT type
+def text_to_textnodes(text):
     nodes = [TextNode(text, TextType.TEXT)]
-    # run the nodes trough the splitter for text_types
     nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
-    nodes = split_nodes_delimiter(nodes, "*", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
     nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
-
-    # run the nodes trough the splitter for image and link split
-
     nodes = split_nodes_image(nodes)
     nodes = split_nodes_link(nodes)
-
-        
-
-
-    
     return nodes
+
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
