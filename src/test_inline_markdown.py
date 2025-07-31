@@ -1,10 +1,63 @@
 import unittest
-from inline_markdown import extract_markdown_images, extract_markdown_links, split_nodes_image, text_to_textnode
+from inline_markdown import extract_markdown_images, extract_markdown_links, split_nodes_image, text_to_textnode, markdown_to_blocks
 from htmlnode import LeafNode, ParentNode
 from textnode import TextNode, TextType
 
 class TestMarkdownExtraction(unittest.TestCase):
 
+    #test for markdown to blocks:
+    def test_markdown_to_blocks(self):
+        md = """
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+- This is a list
+- with items
+"""
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            [
+                "This is **bolded** paragraph",
+                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+                "- This is a list\n- with items",
+            ],
+        )
+    def test_markdown_only_whitespace(self):
+        md = "   \n\n   \t  \n\n  "
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(blocks, [])
+
+    def test_markdown_to_blocks_single_block(self):
+        md = "This is just one paragraph with no breaks."
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(blocks, ["This is just one paragraph with no breaks."])
+
+    def test_markdown_to_blocks_empty(self):
+        md = ""
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(blocks, [])
+
+    def test_markdown_to_blocks_none(self):
+        md = None
+        with self.assertRaises(AttributeError):
+            markdown_to_blocks(md)
+
+    def test_markdown_to_blocks_excessive_newlines(self):
+        md = "Block 1\n\n\n\n\nBlock 2\n\n\n\nBlock 3"
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(blocks, ["Block 1", "Block 2", "Block 3"])
+
+    def test_markdown_to_blocks_whitespace_blocks(self):
+        md = "  Block 1  \n\n   Block 2   \n\n\tBlock 3\t"
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(blocks, ["Block 1", "Block 2", "Block 3"])
+
+    #end of tests for block
+
+      
     #test for text_to_textnode
     def test_plain_text(self):
         text = "Hello world"

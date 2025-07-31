@@ -3,6 +3,21 @@ import re
 from textnode import TextNode, TextType, text_node_to_html_node
 
 
+def markdown_to_blocks(markdown):
+
+    raw_blocks = markdown.split("\n\n")
+    
+    cleaned_blocks = []
+    for block in raw_blocks:
+        stripped = block.strip()
+        if stripped:
+            cleaned_blocks.append(stripped)
+    return cleaned_blocks
+                                 
+
+   
+    
+
 def text_to_textnode(text):
     # Create a TextNode with the input text and TEXT type
     nodes = [TextNode(text, TextType.TEXT)]
