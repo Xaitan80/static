@@ -42,7 +42,39 @@ class TestMarkdownExtraction(unittest.TestCase):
         ]
         self.assertEqual(result, expected)
 
+    def test_image_node(self):
+        text = "Look at this ![alt](image.png)"
+        result = text_to_textnode(text)
+        expected = [
+            TextNode("Look at this ", TextType.TEXT),
+            TextNode("alt", TextType.IMAGE, url="image.png"),
+        ]
+        self.assertEqual(result, expected)
 
+    def test_link_node(self):
+        text = "Check out [test](https://test.com)"
+        result = text_to_textnode(text)
+        expected = [
+            TextNode("Check out ", TextType.TEXT),
+            TextNode("test", TextType.LINK, url="https://test.com"),
+        ]
+        self.assertEqual(result, expected)
+
+    def test_combined_formatting(self):
+        text = "**bold** and *italic* with `code` and ![img](x.png) + [link](y.com)"
+        result = text_to_textnode(text)
+        expected = [
+            TextNode("bold", TextType.BOLD),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" with ", TextType.TEXT),
+            TextNode("code", TextType.CODE),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("img", TextType.IMAGE, url="x.png"),
+            TextNode(" + ", TextType.TEXT),
+            TextNode("link", TextType.LINK, url="y.com"),
+        ]
+        self.assertEqual(result, expected)
 
 
     #end of test for text_to_textnode

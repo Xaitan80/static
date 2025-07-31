@@ -2,7 +2,7 @@ import unittest
 from htmlnode import HTMLNode
 from htmlnode import LeafNode
 from htmlnode import ParentNode
-from conversions import text_node_to_html_node
+from inline_markdown import text_node_to_html_node
 from textnode import TextNode
 from textnode import TextType
 
@@ -62,7 +62,7 @@ class TestHTMLNode(unittest.TestCase):
         self.assertRaises(ValueError, node.to_html)
 
     def test_leaf_to_html_value_empty(self):
-        node = LeafNode("p", "")
+        node = LeafNode("p", None)
         self.assertRaises(ValueError, node.to_html)
 
     def test_leaf_to_html_a(self):
@@ -96,7 +96,7 @@ class TestHTMLNode(unittest.TestCase):
         self.assertRaises(ValueError, node.to_html)
 
     def test_to_html_with_child_none(self):
-        node = ParentNode("p", [])
+        node = ParentNode("p", None)
         self.assertRaises(ValueError, node.to_html)
 
     #unit tests for conversions
