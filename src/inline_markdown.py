@@ -1,7 +1,26 @@
 import re
 
-from textnode import TextNode, TextType
+from textnode import TextNode, TextType, text_node_to_html_node
 
+
+def text_to_textnode(text):
+    # Create a TextNode with the input text and TEXT type
+    nodes = [TextNode(text, TextType.TEXT)]
+    # run the nodes trough the splitter for text_types
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "*", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+
+    # run the nodes trough the splitter for image and link split
+
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+
+        
+
+
+    
+    return nodes
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []

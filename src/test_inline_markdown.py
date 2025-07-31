@@ -1,9 +1,51 @@
 import unittest
-from inline_markdown import extract_markdown_images, extract_markdown_links, split_nodes_image
+from inline_markdown import extract_markdown_images, extract_markdown_links, split_nodes_image, text_to_textnode
 from htmlnode import LeafNode, ParentNode
 from textnode import TextNode, TextType
 
 class TestMarkdownExtraction(unittest.TestCase):
+
+    #test for text_to_textnode
+    def test_plain_text(self):
+        text = "Hello world"
+        result = text_to_textnode(text)
+        expected = [TextNode("Hello world", TextType.TEXT)]
+        self.assertEqual(result, expected)
+
+    def test_bold_text(self):
+        text = "Hello **bold** world"
+        result = text_to_textnode(text)
+        expected = [
+            TextNode("Hello ", TextType.TEXT),
+            TextNode("bold", TextType.BOLD),
+            TextNode(" world", TextType.TEXT),
+        ]
+        self.assertEqual(result, expected)
+
+    def test_italic_text(self):
+        text = "Hello *italic* world"
+        result = text_to_textnode(text)
+        expected = [
+            TextNode("Hello ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" world", TextType.TEXT),
+        ]
+        self.assertEqual(result, expected)
+
+    def test_code_text(self):
+        text = "use `code` snippets"
+        result = text_to_textnode(text)
+        expected = [
+            TextNode("use ", TextType.TEXT),
+            TextNode("code", TextType.CODE),
+            TextNode(" snippets", TextType.TEXT),
+        ]
+        self.assertEqual(result, expected)
+
+
+
+
+    #end of test for text_to_textnode
     def test_extract_single_image(self):
         text = "Here is an image ![alt](http://image.com/pic.png)"
         expected = [("alt", "http://image.com/pic.png")]
